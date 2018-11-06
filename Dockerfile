@@ -54,6 +54,7 @@ RUN set -xe \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
 	&& ./config \
+	&& make depend \
 	&& make -j"$(nproc)" \
 	&& make install \
 	&& rm -rf /tmp/*
