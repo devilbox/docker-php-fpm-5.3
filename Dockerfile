@@ -34,15 +34,6 @@ RUN set -xe \
 ENV PHP_INI_DIR /usr/local/etc/php
 RUN mkdir -p $PHP_INI_DIR/conf.d
 
-ENV GPG_KEYS 0B96609E270F565C13292B24C13C70B87267B52D 0A95E9A026542D53835E3F3A7DEC4E69FC9C83D7 0E604491
-RUN set -xe \
-	&& for key in $GPG_KEYS; do \
-		while ! gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "${key}"; do \
-			sleep 1; \
-			echo "Requesting: ${key}"; \
-		done; \
-	done
-
 # compile openssl, otherwise --with-openssl won't work
 RUN set -xe \
 	&& OPENSSL_VERSION="1.0.2g" \
@@ -50,7 +41,6 @@ RUN set -xe \
 	&& mkdir openssl \
 	&& curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
 	&& curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
-	&& gpg --verify openssl.tar.gz.asc \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
 	&& ./config \
@@ -84,7 +74,6 @@ RUN set -xe \
 	&& mkdir -p /usr/src/php \
 	&& curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o /usr/src/php.tar.xz \
 	&& curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o /usr/src/php.tar.xz.asc \
-	&& gpg --verify /usr/src/php.tar.xz.asc \
 	&& cd /usr/src \
 	&& docker-php-source extract \
 	&& cd /usr/src/php \
