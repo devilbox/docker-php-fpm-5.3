@@ -100,7 +100,7 @@ RUN set -xe \
 	&& cd / \
 	&& docker-php-source delete \
 	\
-	&& DEBIAN_FRONTEND=noninteractive apt-get purge -qq -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+	&& DEBIAN_FRONTEND=noninteractive apt-get purge -qq -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${buildDeps} \
 	&& rm -rf /var/lib/apt/lists/*
 
 COPY docker-php-* /usr/local/bin/
