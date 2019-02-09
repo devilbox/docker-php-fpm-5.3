@@ -50,7 +50,7 @@ RUN set -xe \
 	&& rm -rf /tmp/*
 
 ENV PHP_VERSION 5.3.29
-COPY docker-php-source /usr/local/bin/
+COPY data/docker-php-source /usr/local/bin/
 
 # php 5.3 needs older autoconf
 # --enable-mysqlnd is included below because it's harder to compile after the fact the extensions are (since it's a plugin for several extensions, not an extension in itself)
@@ -103,10 +103,10 @@ RUN set -xe \
 	&& DEBIAN_FRONTEND=noninteractive apt-get purge -qq -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false ${buildDeps} \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY docker-php-* /usr/local/bin/
+COPY data/docker-php-* /usr/local/bin/
 
 WORKDIR /var/www/html
-COPY php-fpm.conf /usr/local/etc/
+COPY data/php-fpm.conf /usr/local/etc/
 
 EXPOSE 9000
 CMD ["php-fpm"]

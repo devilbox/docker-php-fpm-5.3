@@ -1,27 +1,69 @@
 # PHP-FPM 5.3
 
 [![Build Status](https://travis-ci.org/devilbox/docker-php-fpm-5.3.svg?branch=master)](https://travis-ci.org/devilbox/docker-php-fpm-5.3)
-![Tag](https://img.shields.io/github/tag/devilbox/docker-php-fpm-5.3.svg)
-[![Join the chat at https://gitter.im/devilbox/Lobby](https://badges.gitter.im/devilbox/Lobby.svg)](https://gitter.im/devilbox/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Tag](https://img.shields.io/github/tag/devilbox/docker-php-fpm-5.3.svg)](https://github.com/devilbox/docker-php-fpm-5.3/releases)
+[![Gitter](https://badges.gitter.im/devilbox/Lobby.svg)](https://gitter.im/devilbox/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Discourse](https://img.shields.io/discourse/https/devilbox.discourse.group/status.svg?colorB=%234CB697)](https://devilbox.discourse.group)
 [![](https://images.microbadger.com/badges/version/devilbox/php-fpm-5.3.svg)](https://microbadger.com/images/devilbox/php-fpm-5.3 "php-fpm-5.3")
 [![](https://images.microbadger.com/badges/image/devilbox/php-fpm-5.3.svg)](https://microbadger.com/images/devilbox/php-fpm-5.3 "php-fpm-5.3")
-[![](https://images.microbadger.com/badges/license/devilbox/php-fpm-5.3.svg)](https://microbadger.com/images/devilbox/php-fpm-5.3 "php-fpm-5.3")
-
+[![License](https://img.shields.io/badge/license-MIT-%233DA639.svg)](https://opensource.org/licenses/MIT)
 
 This repository will provide you a fully functional PHP-FPM 5.3 Docker image built from [official sources](http://php.net) nightly. PHP 5.3 [reached EOL](http://php.net/eol.php) on 14 Aug 2014 and thus, official docker support was [dropped](https://github.com/docker-library/php/pull/20). It provides the base for [Devilbox PHP-FPM Docker images](https://github.com/devilbox/docker-php-fpm).
-
 
 | Docker Hub | Upstream Project |
 |------------|------------------|
 | <a href="https://hub.docker.com/r/devilbox/php-fpm-5.3"><img height="82px" src="http://dockeri.co/image/devilbox/php-fpm-5.3" /></a> | <a href="https://github.com/cytopia/devilbox" ><img height="82px" src="https://raw.githubusercontent.com/devilbox/artwork/master/submissions_banner/cytopia/01/png/banner_256_trans.png" /></a> |
 
-
 ## Similar Base Images
+
+Have a look at the following similar Devilbox base images for which no official versions exist yet:
 
 * [PHP-FPM 5.2](https://github.com/devilbox/docker-php-fpm-5.2)
 * [PHP-FPM 7.4](https://github.com/devilbox/docker-php-fpm-7.4)
-* [PHP-FPM](https://github.com/devilbox/docker-php-fpm) (all PHP versions)
+* [PHP-FPM 8.0](https://github.com/devilbox/docker-php-fpm-8.0)
 
+In case you are looking for development and production ready PHP-FPM images for all versions,
+which have a vast amount of modules enabled by default go here:
+
+* [PHP-FPM](https://github.com/devilbox/docker-php-fpm)
+
+## Documentation
+
+In case you seek help, go and visit the community pages.
+
+<table width="100%" style="width:100%; display:table;">
+ <thead>
+  <tr>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://devilbox.readthedocs.io">Documentation</a></h3></th>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://gitter.im/devilbox/Lobby">Chat</a></h3></th>
+   <th width="33%" style="width:33%;"><h3><a target="_blank" href="https://devilbox.discourse.group">Forum</a></h3></th>
+  </tr>
+ </thead>
+ <tbody style="vertical-align: middle; text-align: center;">
+  <tr>
+   <td>
+    <a target="_blank" href="https://devilbox.readthedocs.io">
+     <img title="Documentation" name="Documentation" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/readthedocs.png" />
+    </a>
+   </td>
+   <td>
+    <a target="_blank" href="https://gitter.im/devilbox/Lobby">
+     <img title="Chat on Gitter" name="Chat on Gitter" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/gitter.png" />
+    </a>
+   </td>
+   <td>
+    <a target="_blank" href="https://devilbox.discourse.group">
+     <img title="Devilbox Forums" name="Forum" src="https://raw.githubusercontent.com/cytopia/icons/master/400x400/discourse.png" />
+    </a>
+   </td>
+  </tr>
+  <tr>
+  <td><a target="_blank" href="https://devilbox.readthedocs.io">devilbox.readthedocs.io</a></td>
+  <td><a target="_blank" href="https://gitter.im/devilbox/Lobby">gitter.im/devilbox</a></td>
+  <td><a target="_blank" href="https://devilbox.discourse.group">devilbox.discourse.group</a></td>
+  </tr>
+ </tbody>
+</table>
 
 ## Build
 
@@ -29,13 +71,12 @@ This repository will provide you a fully functional PHP-FPM 5.3 Docker image bui
 # Build the Docker image locally
 make build
 
-# Rebuild (without cache) the Docker image locally
+# Rebuild the Docker image locally without cache
 make rebuild
 
 # Test the Docker image after building
 make test
 ```
-
 
 ## Usage
 
@@ -45,6 +86,49 @@ Add the following `FROM` line into your Dockerfile:
 FROM devilbox/php-fpm-5.3:latest
 ```
 
+## Available Modules
+
+If you need a dockerized version of **PHP 5.3** or **PHP-FPM 5.3** which provides a vast amount of
+modules enabled by default visit: **[devilbox/docker-php-fpm](https://github.com/devilbox/docker-php-fpm)**
+
+<!-- modules -->
+| Module       | Built-in  |
+|--------------|-----------|
+| Core         | ✔         |
+| ctype        | ✔         |
+| curl         | ✔         |
+| date         | ✔         |
+| dom          | ✔         |
+| ereg         | ✔         |
+| fileinfo     | ✔         |
+| filter       | ✔         |
+| hash         | ✔         |
+| iconv        | ✔         |
+| json         | ✔         |
+| libxml       | ✔         |
+| mysql        | ✔         |
+| mysqlnd      | ✔         |
+| openssl      | ✔         |
+| pcre         | ✔         |
+| PDO          | ✔         |
+| pdo_sqlite   | ✔         |
+| Phar         | ✔         |
+| posix        | ✔         |
+| readline     | ✔         |
+| recode       | ✔         |
+| Reflection   | ✔         |
+| session      | ✔         |
+| SimpleXML    | ✔         |
+| SPL          | ✔         |
+| SQLite       | ✔         |
+| sqlite3      | ✔         |
+| standard     | ✔         |
+| tokenizer    | ✔         |
+| xml          | ✔         |
+| xmlreader    | ✔         |
+| xmlwriter    | ✔         |
+| zlib         | ✔         |
+<!-- /modules -->
 
 ## Example
 
@@ -76,7 +160,6 @@ docker run -d --rm --name devilbox-nginx-stable \
 #### 4. Open browser
 
 Open up your browser at http://127.0.0.1:8080
-
 
 ## License
 
