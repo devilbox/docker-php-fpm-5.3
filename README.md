@@ -1,6 +1,5 @@
 # PHP-FPM 5.3
 
-
 [![lint](https://github.com/devilbox/docker-php-fpm-5.3/workflows/lint/badge.svg)](https://github.com/devilbox/docker-php-fpm-5.3/actions?query=workflow%3Alint)
 [![build](https://github.com/devilbox/docker-php-fpm-5.3/workflows/build/badge.svg)](https://github.com/devilbox/docker-php-fpm-5.3/actions?query=workflow%3Abuild)
 [![nightly](https://github.com/devilbox/docker-php-fpm-5.3/workflows/nightly/badge.svg)](https://github.com/devilbox/docker-php-fpm-5.3/actions?query=workflow%3Anightly)
