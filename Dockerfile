@@ -36,7 +36,7 @@ RUN mkdir -p $PHP_INI_DIR/conf.d
 
 # compile openssl, otherwise --with-openssl won't work
 RUN set -xe \
-	&& OPENSSL_VERSION="1.0.2g" \
+	&& OPENSSL_VERSION="1.0.1t" \
 	&& cd /tmp \
 	&& mkdir openssl \
 	&& curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
