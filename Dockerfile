@@ -1,26 +1,27 @@
-FROM debian:jessie
+FROM debian:stretch
 MAINTAINER "cytopia" <cytopia@everythingcli.org>
 
 # persistent / runtime deps
-RUN set -xe \
+RUN set -eux \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update -qq \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --no-install-recommends --no-install-suggests \
 		ca-certificates \
 		curl \
 		libpcre3 \
 		librecode0 \
-		libmysqlclient-dev \
+		libmariadbclient-dev-compat \
 		libsqlite3-0 \
 		libxml2 \
 	&& DEBIAN_FRONTEND=noninteractive apt-get purge -qq -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
 	&& rm -rf /var/lib/apt/lists/*
 
 # phpize deps
-RUN set -xe \
+RUN set -eux \
 	&& DEBIAN_FRONTEND=noninteractive apt-get update -qq \
 	&& DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --no-install-recommends --no-install-suggests \
 		autoconf \
 		file \
+		dpkg-dev \
 		g++ \
 		gcc \
 		libc-dev \
@@ -35,12 +36,12 @@ ENV PHP_INI_DIR /usr/local/etc/php
 RUN mkdir -p $PHP_INI_DIR/conf.d
 
 # compile openssl, otherwise --with-openssl won't work
-RUN set -xe \
+RUN set -eux \
 	&& OPENSSL_VERSION="1.0.1t" \
 	&& cd /tmp \
 	&& mkdir openssl \
-	&& curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
-	&& curl -sL "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
+	&& curl -sS -k -L --fail "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
+	&& curl -sS -k -L --fail "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
 	&& ./config \
@@ -54,7 +55,7 @@ COPY data/docker-php-source /usr/local/bin/
 
 # php 5.3 needs older autoconf
 # --enable-mysqlnd is included below because it's harder to compile after the fact the extensions are (since it's a plugin for several extensions, not an extension in itself)
-RUN set -xe \
+RUN set -eux \
 	&& buildDeps=" \
 		autoconf2.13 \
 		libcurl4-openssl-dev \
@@ -72,12 +73,14 @@ RUN set -xe \
 	&& rm -rf /var/lib/apt/lists/* \
 	\
 	&& mkdir -p /usr/src/php \
-	&& curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o /usr/src/php.tar.xz \
-	&& curl -SL "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o /usr/src/php.tar.xz.asc \
-	&& cd /usr/src \
+	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o /usr/src/php.tar.xz \
+	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o /usr/src/php.tar.xz.asc \
 	&& docker-php-source extract \
 	&& cd /usr/src/php \
+	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+	&& debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
 	&& ./configure \
+		--host="${gnuArch}" \
 		--with-config-file-path="$PHP_INI_DIR" \
 		--with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
 		--enable-fpm \
