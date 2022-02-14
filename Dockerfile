@@ -40,10 +40,22 @@ RUN set -eux \
 	&& OPENSSL_VERSION="1.0.1t" \
 	&& cd /tmp \
 	&& mkdir openssl \
+	&& update-ca-certificates \
 	&& curl -sS -k -L --fail "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" -o openssl.tar.gz \
 	&& curl -sS -k -L --fail "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
+	\
+	# Fix libs for i386
+	&& if [ "$(dpkg-architecture  --query DEB_HOST_ARCH)" = "i386" ]; then \
+		ls -1p "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
+			| grep '/$' \
+			| xargs -n1 sh -c 'ln -s "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/include/"' -- || true; \
+		touch /usr/include/gnu/stubs-64.h; \
+		ls -1 "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
+			| xargs -n1 sh -c 'ln -s "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/lib/"' -- || true; \
+	fi \
+	\
 	&& ./config \
 	&& make depend \
 	&& make -j"$(nproc)" \
