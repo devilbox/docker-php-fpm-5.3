@@ -23,7 +23,9 @@ RUN set -eux \
 		file \
 		dpkg-dev \
 		g++ \
+		g++-multilib \
 		gcc \
+		gcc-multilib \
 		libc-dev \
 		make \
 		pkg-config \
@@ -46,16 +48,15 @@ RUN set -eux \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
 	\
-	# Fix libs for i386
-	&& if [ "$(dpkg-architecture  --query DEB_HOST_ARCH)" = "i386" ]; then \
-		ls -1p "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
-			| grep '/$' \
-			| xargs -n1 sh -c 'ln -s "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/include/"' -- || true; \
-		touch /usr/include/gnu/stubs-64.h; \
-		ls -1 "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
-			| xargs -n1 sh -c 'ln -s "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/lib/"' -- || true; \
-	fi \
-	\
+	## Fix libs for i386
+	#&& if [ "$(dpkg-architecture  --query DEB_HOST_ARCH)" = "i386" ]; then \
+	#	ls -1p "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
+	#		| grep '/$' \
+	#		| xargs -n1 sh -c 'ln -s "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/include/"' -- || true; \
+	#	touch /usr/include/gnu/stubs-64.h; \
+	#	ls -1 "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
+	#		| xargs -n1 sh -c 'ln -s "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/lib/"' -- || true; \
+	#fi \
 	&& ./config \
 	&& make depend \
 	&& make -j"$(nproc)" \
@@ -91,6 +92,10 @@ RUN set -eux \
 	&& cd /usr/src/php \
 	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
 	&& debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
+	\
+	# Fix libmariadbclient lib location
+	&& find /usr/lib/ -name '*mariadbclient*' | xargs -n1 sh -c 'ln -s "${1}" "/usr/lib/$( basename "${1}" | sed "s|libmariadbclient|libmysqlclient|g" )"' -- \
+	\
 	# https://bugs.php.net/bug.php?id=74125
 	&& if [ ! -d /usr/include/curl ]; then \
 		ln -sT "/usr/include/$debMultiarch/curl" /usr/local/include/curl; \
