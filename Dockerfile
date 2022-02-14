@@ -23,14 +23,17 @@ RUN set -eux \
 		file \
 		dpkg-dev \
 		g++ \
-		g++-multilib \
 		gcc \
-		gcc-multilib \
 		libc-dev \
 		make \
 		pkg-config \
 		re2c \
 		xz-utils \
+	&& if [ "$(dpkg-architecture --query DEB_HOST_ARCH)" = "i386" ]; then \
+		DEBIAN_FRONTEND=noninteractive apt-get install -qq -y --no-install-recommends --no-install-suggests \
+			g++-multilib \
+			gcc-multilib; \
+	fi \
 	&& DEBIAN_FRONTEND=noninteractive apt-get purge -qq -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
 	&& rm -rf /var/lib/apt/lists/*
 
