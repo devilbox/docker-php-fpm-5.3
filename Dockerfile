@@ -50,17 +50,11 @@ RUN set -eux \
 	&& curl -sS -k -L --fail "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz.asc" -o openssl.tar.gz.asc \
 	&& tar -xzf openssl.tar.gz -C openssl --strip-components=1 \
 	&& cd /tmp/openssl \
-	\
-	## Fix libs for i386
-	#&& if [ "$(dpkg-architecture  --query DEB_HOST_ARCH)" = "i386" ]; then \
-	#	ls -1p "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
-	#		| grep '/$' \
-	#		| xargs -n1 sh -c 'ln -s "/usr/include/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/include/"' -- || true; \
-	#	touch /usr/include/gnu/stubs-64.h; \
-	#	ls -1 "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/" \
-	#		| xargs -n1 sh -c 'ln -s "/usr/lib/$(dpkg-architecture --query DEB_BUILD_MULTIARCH)/${1}" "/usr/lib/"' -- || true; \
-	#fi \
-	&& ./config \
+	&& if [ "$(dpkg-architecture  --query DEB_HOST_ARCH)" = "i386" ]; then \
+		setarch i386 ./config -m32; \
+	else \
+		./config; \
+	fi \
 	&& make depend \
 	&& make -j"$(nproc)" \
 	&& make install \
@@ -92,7 +86,8 @@ RUN set -eux \
 	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o /usr/src/php.tar.xz \
 	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o /usr/src/php.tar.xz.asc \
 	&& docker-php-source extract \
-	&& cd /usr/src/php \
+	&& cd /usr/src/php  \
+	\
 	&& gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
 	&& debMultiarch="$(dpkg-architecture --query DEB_BUILD_MULTIARCH)" \
 	\
