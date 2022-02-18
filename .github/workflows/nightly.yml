@@ -69,7 +69,7 @@ jobs:
           - ${{ fromJson(needs.configure.outputs.matrix_arch) }}
         refs:
           - 'master'
-          - '0.25'
+          - '0.23'
     steps:
       # ------------------------------------------------------------
       # Setup repository
@@ -147,7 +147,7 @@ jobs:
           - ${{ fromJson(needs.configure.outputs.matrix_version) }}
         refs:
           - 'master'
-          - '0.25'
+          - '0.23'
     steps:
       # ------------------------------------------------------------
       # Setup repository
