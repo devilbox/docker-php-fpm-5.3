@@ -29,8 +29,8 @@ jobs:
           - '5.3'
         arch:
           - 'linux/amd64'
-          - 'linux/arm64'
           - 'linux/386'
+          - 'linux/arm64'
           - 'linux/arm/v7'
           - 'linux/arm/v6'
     steps:
@@ -51,13 +51,13 @@ jobs:
 
       - name: "[SETUP] Determine Docker tag"
         id: tag
-        uses: cytopia/docker-tag@v0.4
+        uses: cytopia/docker-tag-action@v0.4.7
 
       # ------------------------------------------------------------
       # Build
       # ------------------------------------------------------------
       - name: Build
-        uses: cytopia/shell-command-retry-action@v0.1
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
             make build ARCH=${ARCH}
@@ -68,7 +68,7 @@ jobs:
       # Test
       # ------------------------------------------------------------
       - name: "[TEST] Docker Image"
-        uses: cytopia/shell-command-retry-action@v0.1
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
             make test ARCH=${ARCH}
@@ -76,7 +76,7 @@ jobs:
           ARCH: ${{ matrix.arch }}
 
       - name: "[TEST] Update README"
-        uses: cytopia/shell-command-retry-action@v0.1
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
             make update-readme ARCH=${ARCH}
@@ -90,14 +90,23 @@ jobs:
       # ------------------------------------------------------------
       # Deploy
       # ------------------------------------------------------------
-      - name: "[DEPLOY] Login"
+      - name: "[DEPLOY] Login (only repo owner)"
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        # https://help.github.com/en/github/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#functions
+        if: github.event.pull_request.base.repo.id == github.event.pull_request.head.repo.id
+            && (
+              (github.event_name == 'schedule' && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
+              ||
+              (github.event_name == 'push'     && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
+              ||
+              (github.event_name == 'push'     && startsWith(github.ref, 'refs/heads/release-'))
+            )
 
       - name: "[DEPLOY] Publish architecture image (only repo owner)"
-        uses: cytopia/shell-command-retry-action@v0.1
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
             make push-arch TAG=${{ steps.tag.outputs.docker-tag }} ARCH=${ARCH}
@@ -125,6 +134,15 @@ jobs:
       matrix:
         version:
           - '5.3'
+    # https://help.github.com/en/github/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#functions
+    if: github.event.pull_request.base.repo.id == github.event.pull_request.head.repo.id
+        && (
+          (github.event_name == 'schedule' && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
+          ||
+          (github.event_name == 'push'     && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
+          ||
+          (github.event_name == 'push'     && startsWith(github.ref, 'refs/heads/release-'))
+        )
     steps:
 
       # ------------------------------------------------------------
@@ -137,7 +155,7 @@ jobs:
 
       - name: "[SETUP] Determine Docker tag"
         id: tag
-        uses: cytopia/docker-tag@v0.4
+        uses: cytopia/docker-tag-action@v0.4.7
 
       # ------------------------------------------------------------
       # Deploy
@@ -149,22 +167,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: "[DEPLOY] Create Docker manifest"
-        uses: cytopia/shell-command-retry-action@v0.1
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
-            make manifest-create TAG=${{ steps.tag.outputs.docker-tag }} ARCH="linux/amd64,linux/arm64,linux/386,linux/arm/v7,linux/arm/v6"
+            make manifest-create TAG=${{ steps.tag.outputs.docker-tag }} ARCH="linux/amd64,linux/386"
 
-      - name: "[DEPLOY] Publish Docker manifest (only repo owner)"
-        uses: cytopia/shell-command-retry-action@v0.1
+      - name: "[DEPLOY] Publish Docker manifest"
+        uses: cytopia/shell-command-retry-action@v0.1.2
         with:
           command: |
             make manifest-push TAG=${{ steps.tag.outputs.docker-tag }}
-        # https://help.github.com/en/github/automating-your-workflow-with-github-actions/contexts-and-expression-syntax-for-github-actions#functions
-        if: github.event.pull_request.base.repo.id == github.event.pull_request.head.repo.id
-            && (
-              (github.event_name == 'schedule' && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
-              ||
-              (github.event_name == 'push'     && (github.ref == 'refs/heads/master'   || startsWith(github.ref, 'refs/tags/')))
-              ||
-              (github.event_name == 'push'     && startsWith(github.ref, 'refs/heads/release-'))
-            )

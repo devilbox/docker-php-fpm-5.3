@@ -11,7 +11,7 @@
 [![](https://images.microbadger.com/badges/image/devilbox/php-fpm-5.3.svg)](https://microbadger.com/images/devilbox/php-fpm-5.3 "php-fpm-5.3")
 [![License](https://img.shields.io/badge/license-MIT-%233DA639.svg)](https://opensource.org/licenses/MIT)
 
-**Available Architectures:**  `amd64`, `arm64`, `386`, `arm/v7`, `arm/v6`
+**Available Architectures:**  `amd64`, `i386`, `arm64`, `arm/v7`, `arm/v6`
 
 This repository will provide you a fully functional PHP-FPM 5.3 Docker image built from [official sources](http://php.net) nightly. PHP 5.3 [reached EOL](http://php.net/eol.php) on 14 Aug 2014 and thus, official docker support was [dropped](https://github.com/docker-library/php/pull/20). It provides the base for [Devilbox PHP-FPM Docker images](https://github.com/devilbox/docker-php-fpm).
 
