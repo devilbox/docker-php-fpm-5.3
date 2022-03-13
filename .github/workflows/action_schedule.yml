@@ -28,7 +28,6 @@ jobs:
     with:
       enabled: true
       can_deploy: true
-      name: ${{ needs.params.outputs.name }}
       matrix: ${{ needs.params.outputs.matrix }}
       refs: ${{ needs.params.outputs.refs }}
     secrets:
