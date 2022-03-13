@@ -130,6 +130,7 @@ COPY data/docker-php-* /usr/local/bin/
 
 WORKDIR /var/www/html
 COPY data/php-fpm.conf /usr/local/etc/
+COPY data/php.ini /usr/local/etc/php/php.ini
 
 EXPOSE 9000
 CMD ["php-fpm"]
