@@ -4,7 +4,7 @@ set -o pipefail
 
 IMAGE="${1}"
 #NAME="${2}"
-#VERSION="${3}"
+VERSION="${3}"
 TAG="${4}"
 ARCH="${5}"
 
@@ -20,7 +20,7 @@ DOC_ROOT_CONT="/var/www/default"
 CONFIG_HOST="$( mktemp -d )"
 CONFIG_CONT="/etc/nginx/conf.d"
 
-NAME_PHP="devilbox-php-fpm-5-2"
+NAME_PHP="devilbox-php-fpm-${VERSION}"
 
 NAME_WEB="nginx-stable-devilbox"
 CONT_WEB="nginx:stable"
