@@ -19,12 +19,30 @@ This repository will provide you a fully functional PHP-FPM 5.3 Docker image bui
 |------------|------------------|
 | <a href="https://hub.docker.com/r/devilbox/php-fpm-5.3"><img height="82px" src="http://dockeri.co/image/devilbox/php-fpm-5.3" /></a> | <a href="https://github.com/cytopia/devilbox" ><img height="82px" src="https://raw.githubusercontent.com/devilbox/artwork/master/submissions_banner/cytopia/01/png/banner_256_trans.png" /></a> |
 
+## Available Docker tags
+
+| Docker Tag                      | Description                                                  |
+|---------------------------------|--------------------------------------------------------------|
+| `latest`                        | Latest Debian Jessie image (default)                         |
+| `jessie`                        | Latest Debian Jessie image                                   |
+| `stretch`                       | Latest Debian Stretch image                                  |
+|                                 |                                                              |
+| `[0-9]\.[0-9]+`                 | Git tagged Debian Jessie image. E.g: `0.53`                  |
+| `jessie-[0-9]\.[0-9]+`          | Git tagged Debian Jessie image. E.g: `jessie-0.53`           |
+| `stretch-[0-9]\.[0-9]+`         | Git tagged Debian Stretch image. E.g: `stretch-0.53`         |
+|                                 |                                                              |
+| `release-[0-9]\.[0-9]+`         |  Git branch Debian Jessie image. E.g: `release-0.53`         |
+| `jessie-release-[0-9]\.[0-9]+`  |  Git branch Debian Jessie image. E.g: `jessie-release-0.53`  |
+| `stretch-release-[0-9]\.[0-9]+` | Git branch Debian Stretch image. E.g: `stretch-release-0.53` |
+
 ## Similar Base Images
 
 Have a look at the following similar Devilbox base images for which no official versions exist yet:
 
 * [PHP-FPM 5.2](https://github.com/devilbox/docker-php-fpm-5.2)
 * [PHP-FPM 5.3](https://github.com/devilbox/docker-php-fpm-5.3)
+* [PHP-FPM 5.4](https://github.com/devilbox/docker-php-fpm-5.4)
+* [PHP-FPM 5.5](https://github.com/devilbox/docker-php-fpm-5.5)
 * [PHP-FPM 7.4](https://github.com/devilbox/docker-php-fpm-7.4)
 * [PHP-FPM 8.0](https://github.com/devilbox/docker-php-fpm-8.0)
 * [PHP-FPM 8.1](https://github.com/devilbox/docker-php-fpm-8.1)
@@ -115,6 +133,7 @@ modules enabled by default visit: **[devilbox/docker-php-fpm](https://github.com
 | json         | ✔         |
 | libxml       | ✔         |
 | mysql        | ✔         |
+| mysqli       | ✔         |
 | mysqlnd      | ✔         |
 | openssl      | ✔         |
 | pcre         | ✔         |
