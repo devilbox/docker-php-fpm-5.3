@@ -92,7 +92,10 @@ RUN set -eux \
 # Remove Dependencies
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
 		${BUILD_TOOLS} \
-		${BUILD_TOOLS_32} \
+	&& if [ "$(dpkg-architecture --query DEB_HOST_ARCH)" = "i386" ]; then \
+		apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
+			${BUILD_TOOLS_32}; \
+	fi \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -167,7 +170,10 @@ RUN set -eux \
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
 		${PHP_BUILD_DEPS} \
 		${BUILD_TOOLS} \
-		${BUILD_TOOLS_32} \
+	&& if [ "$(dpkg-architecture --query DEB_HOST_ARCH)" = "i386" ]; then \
+		apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false \
+			${BUILD_TOOLS_32}; \
+	fi \
 # Install Run-time requirements
 	&& apt-get update \
 	&& apt-get install -y --no-install-recommends --no-install-suggests \
