@@ -40,6 +40,14 @@ else
 	endif
 endif
 ARCH       = linux/amd64
+ifeq ($(strip $(ARCH)),linux/arm64)
+	ifeq ($(strip $(FLAVOUR)),latest)
+		FILE = Dockerfile.jessie-arm64
+	endif
+	ifeq ($(strip $(FLAVOUR)),jessie)
+		FILE = Dockerfile.jessie-arm64
+	endif
+endif
 
 # Makefile.lint overwrites
 FL_IGNORES  = .git/,.github/,tests/,Dockerfiles/data/
