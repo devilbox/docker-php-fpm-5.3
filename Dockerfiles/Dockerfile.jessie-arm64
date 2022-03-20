@@ -232,6 +232,10 @@ RUN set -eux \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
+# Fix config.guess for PHP modules (adds 'aarch64' [arm64] architecture)
+# The config.guess has been copied from PHP 5.5
+COPY data/php/usr-local-lib-php-build-config.guess /usr/local/lib/php/build/config.guess
+COPY data/php/usr-local-lib-php-build-config.sub /usr/local/lib/php/build/config.sub
 
 COPY data/docker-php-* /usr/local/bin/
 
