@@ -18,6 +18,7 @@ ENV PHP_BUILD_DEPS \
 	libbison-dev \
 	libcurl4-openssl-dev \
 	libfl-dev \
+	libmhash-dev \
 	libmysqlclient-dev \
 	libpcre3-dev \
 	libreadline6-dev \
@@ -28,6 +29,7 @@ ENV PHP_BUILD_DEPS \
 	libxml2-dev
 
 ENV PHP_RUNTIME_DEPS \
+	libmhash2 \
 	libmysqlclient18 \
 	libpcre3 \
 	librecode0 \
@@ -122,6 +124,7 @@ RUN set -eux \
 ### Copy PHP scripts
 ###
 COPY data/docker-php-source /usr/local/bin/
+COPY data/php/php-${PHP_VERSION}.tar.xz /usr/src/php.tar.xz
 
 
 ###
@@ -137,9 +140,6 @@ RUN set -eux \
 		apt-get install -y --no-install-recommends --no-install-suggests \
 			${BUILD_TOOLS_32}; \
 	fi \
-# Fetch PHP
-	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz/from/this/mirror" -o /usr/src/php.tar.xz \
-	&& curl -sS -k -L --fail "http://php.net/get/php-$PHP_VERSION.tar.xz.asc/from/this/mirror" -o /usr/src/php.tar.xz.asc \
 # Setup Requirements
 	&& docker-php-source extract \
 	&& cd /usr/src/php  \
@@ -203,7 +203,9 @@ RUN set -eux \
 		${PHP_RUNTIME_DEPS} \
 		${RUNTIME_TOOLS} \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+	&& rm -rf /var/lib/apt/lists/* \
+# Setup extension dir
+	&& mkdir -p "$(php -r 'echo ini_get("extension_dir");')"
 
 # Fix config.guess for PHP modules (adds 'aarch64' [arm64] architecture)
 # The config.guess has been copied from PHP 5.5
