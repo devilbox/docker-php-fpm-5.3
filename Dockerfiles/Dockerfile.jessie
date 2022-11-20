@@ -67,6 +67,18 @@ ENV RUNTIME_TOOLS \
 
 
 ###
+### Fix expiring apt keys
+###
+RUN set -eux \
+	&& echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid-until \
+	&& { \
+		echo "deb [trusted=yes] http://deb.debian.org/debian jessie main"; \
+		echo "deb [trusted=yes] http://security.debian.org/debian-security jessie/updates main"; \
+		echo "deb [trusted=yes] http://deb.debian.org/debian jessie-updates main"; \
+	} > /etc/apt/sources.list
+
+
+###
 ### Build OpenSSL
 ###
 RUN set -eux \
