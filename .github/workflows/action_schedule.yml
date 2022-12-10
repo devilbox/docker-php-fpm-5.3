@@ -10,9 +10,9 @@ name: nightly
 # When to run
 # -------------------------------------------------------------------------------------------------
 on:
-  # Runs daily
+  # Every Sunday at 8pm UTC
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 20 * * 0'
 
 
 jobs:
